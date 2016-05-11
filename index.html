@@ -3,7 +3,48 @@
     <head>
         <meta charset="UTF-8">
         <title>Code</title>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:800,700' rel='stylesheet' type='text/css'>
         <style>
+            * {
+                font-family: 'Open Sans', sans-serif;
+            }
+            
+            html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+            }
+            
+            ul {
+                list-style-type: none;
+                padding: 0;
+            }
+            
+            #code {
+                width: 30vw;
+                height: 100%;
+                float: right;
+            }
+            
+            #commands {
+                display: inline-block;
+                width: 38%;
+                background-color: #f0cb73;
+            }
+            
+            #program {
+                display: inline-block;
+                width: 60%;
+                float: right;
+                background-color: #f0cb73;
+            }
+            
+            #content {
+                width: 70vw;
+                height: 100%;
+                text-align: center;
+            }
+            
             #input {
                 position: absolute;
                 float: left;
@@ -11,25 +52,50 @@
             
             #output {
                 position: absolute;
-                right: 0;
+                right: 30vw;
             }
             
             #memory {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translateX(-50%) translateY(-50%);
+                position: relative;
+                width: 50%;
+                height: 35vw;
+                margin: auto;
             }
             
             #memory table {
                 border-collapse: collapse;
                 border: 1px solid #000;
+                width: 100%;
+                height: 100%;
+            }
+            
+            #memory table tr {
+                width: 100%;
+                height: 25%;
             }
             
             #memory table tr td {
                 border: 1px solid #000;
-                width: 75px;
-                height: 75px;
+                width: 10%;
+                height: 25%;
+                text-align: center;
+            }
+            
+            .number {
+                display: inline-block;
+                background-color: #b3e61a;
+                padding: 0 1vw;
+                font-size: 3vw;
+                margin: 0.5vw 1vw;
+            }
+            
+            .command {
+                display: inline-block;
+                background-color: #b3e61a;
+                border-radius: 0.5vw;
+                font-size: 1.5vw;
+                padding: 0.5vw 1vw;
+                margin: 0.5vw 1vw;
             }
         </style>
         <script src="main.js"></script>
@@ -37,51 +103,62 @@
     <body>
         <div id="code">
             <div id="commands">
-                
+                <span class="command">input</span>
+                <span class="command">output</span>
+                <span class="command">copyto</span>
+                <span class="command">copyfrom</span>
+                <span class="command">jump</span>
+            </div>
+            <div id="program">
+                <ul id="programlist">
+                    
+                </ul>
             </div>
         </div>
-        <button onclick="stepCode();">Step</button>
-        <div id="controlls">
-            <p id="holding"></p>
-            <p id="step"></p>
-        </div>
-        <div id="input">
-            <ul id="outputlist">
-                
-            </ul>
-        </div>
-        <div id="output">
-            <ul id="outputlist">
-                
-            </ul>
-        </div>
-        <div id="memory">
-            <table>
-                <tr>
-                    <td id="memory0"></td>
-                    <td id="memory1"></td>
-                    <td id="memory2"></td>
-                    <td id="memory3"></td>
-                </tr>
-                <tr>
-                    <td id="memory4"></td>
-                    <td id="memory5"></td>
-                    <td id="memory6"></td>
-                    <td id="memory7"></td>
-                </tr>
-                <tr>
-                    <td id="memory8"></td>
-                    <td id="memory9"></td>
-                    <td id="memory10"></td>
-                    <td id="memory11"></td>
-                </tr>
-                <tr>
-                    <td id="memory12"></td>
-                    <td id="memory13"></td>
-                    <td id="memory14"></td>
-                    <td id="memory15"></td>
-                </tr>
-            </table>
+        <div id="content">
+            <div id="controlls">
+                <button onclick="stepCode();">Step</button>
+                <p id="holding"></p>
+                <p id="step"></p>
+            </div>
+            <div id="input">
+                <ul id="inputlist">
+                    
+                </ul>
+            </div>
+            <div id="output">
+                <ul id="outputlist">
+                    
+                </ul>
+            </div>
+            <div id="memory">
+                <table>
+                    <tr>
+                        <td id="memory0"></td>
+                        <td id="memory1"></td>
+                        <td id="memory2"></td>
+                        <td id="memory3"></td>
+                    </tr>
+                    <tr>
+                        <td id="memory4"></td>
+                        <td id="memory5"></td>
+                        <td id="memory6"></td>
+                        <td id="memory7"></td>
+                    </tr>
+                    <tr>
+                        <td id="memory8"></td>
+                        <td id="memory9"></td>
+                        <td id="memory10"></td>
+                        <td id="memory11"></td>
+                    </tr>
+                    <tr>
+                        <td id="memory12"></td>
+                        <td id="memory13"></td>
+                        <td id="memory14"></td>
+                        <td id="memory15"></td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </body>
 </html>
