@@ -4,13 +4,84 @@
         <meta charset="UTF-8">
         <title>Code</title>
         <style>
+            #input {
+                position: absolute;
+                float: left;
+            }
             
+            #output {
+                position: absolute;
+                right: 0;
+            }
+            
+            #memory {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translateX(-50%) translateY(-50%);
+            }
+            
+            #memory table {
+                border-collapse: collapse;
+                border: 1px solid #000;
+            }
+            
+            #memory table tr td {
+                border: 1px solid #000;
+                width: 75px;
+                height: 75px;
+            }
         </style>
         <script src="main.js"></script>
     </head>
     <body>
         <div id="code">
-            
+            <div id="commands">
+                
+            </div>
+        </div>
+        <button onclick="stepCode();">Step</button>
+        <div id="controlls">
+            <p id="holding"></p>
+            <p id="step"></p>
+        </div>
+        <div id="input">
+            <ul id="outputlist">
+                
+            </ul>
+        </div>
+        <div id="output">
+            <ul id="outputlist">
+                
+            </ul>
+        </div>
+        <div id="memory">
+            <table>
+                <tr>
+                    <td id="memory0"></td>
+                    <td id="memory1"></td>
+                    <td id="memory2"></td>
+                    <td id="memory3"></td>
+                </tr>
+                <tr>
+                    <td id="memory4"></td>
+                    <td id="memory5"></td>
+                    <td id="memory6"></td>
+                    <td id="memory7"></td>
+                </tr>
+                <tr>
+                    <td id="memory8"></td>
+                    <td id="memory9"></td>
+                    <td id="memory10"></td>
+                    <td id="memory11"></td>
+                </tr>
+                <tr>
+                    <td id="memory12"></td>
+                    <td id="memory13"></td>
+                    <td id="memory14"></td>
+                    <td id="memory15"></td>
+                </tr>
+            </table>
         </div>
     </body>
 </html>
