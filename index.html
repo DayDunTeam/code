@@ -59,7 +59,7 @@
             }
             
             #controlls {
-                position: absolute;
+                position: fixed;
                 bottom: 0;
                 width: 100%;
             }
@@ -140,7 +140,7 @@
             <ul id="commands">
                 
             </ul>
-            <div id="program">
+            <div id="program" ondrop="commandDrop(event);" ondragover="canDropCommand(event);">
                 <div id="programstep"></div>
                 <ul id="programlist">
                     

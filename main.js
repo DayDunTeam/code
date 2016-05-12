@@ -36,11 +36,28 @@ var program = [
     ["input"],
     ["copyto", 0, false],
     ["input"],
+    ["add", 0],
     ["output"],
     ["copyfrom", 0, false],
     ["output"],
     ["jump", 0]
 ];
+
+
+function commandDragStart(event) {
+    event.dataTransfer.setData("text", event.target.id);
+}
+
+function canDropCommand(event) {
+    event.preventDefault();
+}
+
+function commandDrop(event) {
+    event.preventDefault();
+    var data = event.dataTransfer.getData("text");
+    event.target.appendChild(document.getElementById(data));
+}
+
 
 window.onload = function() {
     update();
@@ -56,6 +73,10 @@ function stepCode() {
         memory[program[step][1]] = holding;
     } else if (program[step][0] == "copyfrom") {
         holding = memory[program[step][1]];
+    } else if (program[step][0] == "add") {
+        holding += memory[program[step][1]];
+    } else if (program[step][0] == "sub") {
+        holding += memory[program[step][1]];
     } else if (program[step][0] == "jump") {
         step = program[step][1] - 1;
     }
@@ -66,7 +87,7 @@ function stepCode() {
 function update() {
     if (running) {
         document.getElementById("programstep").style.display = "";
-        document.getElementById("programstep").style["margin-top"] = (4 * step) + "vw";
+        document.getElementById("programstep").style["margin-top"] = (4 * step) - 1 + "vw";
         document.getElementById("commands").style.display = "none";
     } else {
         document.getElementById("programstep").style.display = "none";
@@ -80,10 +101,10 @@ function update() {
     
     document.getElementById("programlist").innerHTML = "";
     for (i=0; i<program.length; i++) {
-        if (program[i][0] == "copyto" || program[i][0] == "copyfrom" || program[i][0] == "jump") {
-            document.getElementById("programlist").innerHTML += "<li><span class=\"command " + commands[program[i][0]] + "\">" + program[i][0] + "</span><span class=\"command " + commands[program[i][0]] + "\">" + program[i][1] + "</span></li>";
+        if (program[i][0] == "copyto" || program[i][0] == "copyfrom" || program[i][0] == "jump" || program[i][0] == "add" || program[i][0] == "sub") {
+            document.getElementById("programlist").innerHTML += "<li draggable=\"true\" ondragstart=\"commandDragStart(event);\"><span class=\"command " + commands[program[i][0]] + "\">" + program[i][0] + "</span><span class=\"command " + commands[program[i][0]] + "\">" + program[i][1] + "</span></li>";
         } else {
-            document.getElementById("programlist").innerHTML += "<li><span class=\"command " + commands[program[i][0]] + "\">" + program[i][0] + "</span></li>";
+            document.getElementById("programlist").innerHTML += "<li draggable=\"true\" ondragstart=\"commandDragStart(event);\"><span class=\"command " + commands[program[i][0]] + "\">" + program[i][0] + "</span></li>";
         }
     }
     
