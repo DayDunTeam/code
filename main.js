@@ -1,3 +1,15 @@
+var commands = {
+    input: "green",
+    output: "green",
+    copyto: "red",
+    copyfrom: "red",
+    add: "orange",
+    sub: "orange",
+    jump: "blue"
+};
+
+var running = true;
+
 var step = 0;
 
 var input = [
@@ -52,9 +64,27 @@ function stepCode() {
 }
 
 function update() {
+    if (running) {
+        document.getElementById("programstep").style.display = "";
+        document.getElementById("programstep").style["margin-top"] = (4 * step) + "vw";
+        document.getElementById("commands").style.display = "none";
+    } else {
+        document.getElementById("programstep").style.display = "none";
+        document.getElementById("commands").style.display = "";
+    }
+    
+    document.getElementById("commands").innerHTML = "";
+    for (var i in commands) {
+        document.getElementById("commands").innerHTML += "<li><span class=\"command " + commands[i] + "\">" + i + "</span></li>";
+    }
+    
     document.getElementById("programlist").innerHTML = "";
     for (i=0; i<program.length; i++) {
-        document.getElementById("programlist").innerHTML += "<li><span class=\"command\">" + program[i][0] + "</span></li>";
+        if (program[i][0] == "copyto" || program[i][0] == "copyfrom" || program[i][0] == "jump") {
+            document.getElementById("programlist").innerHTML += "<li><span class=\"command " + commands[program[i][0]] + "\">" + program[i][0] + "</span><span class=\"command " + commands[program[i][0]] + "\">" + program[i][1] + "</span></li>";
+        } else {
+            document.getElementById("programlist").innerHTML += "<li><span class=\"command " + commands[program[i][0]] + "\">" + program[i][0] + "</span></li>";
+        }
     }
     
     
