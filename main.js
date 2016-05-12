@@ -8,7 +8,7 @@ var commands = {
     jump: "blue"
 };
 
-var running = true;
+var running = false;
 
 var step = 0;
 
@@ -44,19 +44,82 @@ var program = [
 ];
 
 
-function commandDragStart(event) {
-    event.dataTransfer.setData("text", event.target.id);
-}
+var command = {};
 
-function canDropCommand(event) {
-    event.preventDefault();
-}
+command.holding = null;
 
-function commandDrop(event) {
+command.isNew = false;
+
+command.placehloder = null;
+
+command.dragStart = function(event) {
+    /*if (running) {
+        event.preventDefault();
+    } else {*/
+        command.placeholder = document.createElement("li");
+        var placeholder = document.createElement("span");
+        placeholder.className = "command commandplaceholder";
+        command.placeholder.appendChild(placeholder);
+        
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("text/html", event.target.innerHTML);
+        command.holding = event.target;
+        command.isNew = event.target.parentNode.id == "commands";
+        //event.target.style.display = "none";
+    //}
+};
+
+command.canDrop = function(event) {
     event.preventDefault();
-    var data = event.dataTransfer.getData("text");
-    event.target.appendChild(document.getElementById(data));
-}
+};
+
+command.dragEnter = function(event, element) {
+    if (!command.isNew) {
+        command.holding.style.display = "none";
+    }
+    
+    var isAfter = false;
+    for (i=command.placeholder; i; i=i.previousSibling) {
+        if (i === event.target) {
+            isAfter = true;
+        }
+    }
+    
+    //console.log(command.holding);
+    
+    if (!isAfter) {
+        document.getElementById("programlist").insertBefore(command.placeholder, element.nextSibling);
+    } else {
+        document.getElementById("programlist").insertBefore(command.placeholder, element);
+    }
+};
+
+command.drop = function(event) {
+    event.preventDefault();
+    if (command.isNew) {
+        holdingClone = command.holding.cloneNode(true);
+        holdingClone.ondragstart = command.dragStart;
+        holdingClone.ondragenter = function(event) {command.dragEnter(event, this);};
+        document.getElementById("programlist").replaceChild(holdingClone, command.placeholder);
+        holdingClone.style.display = "";
+    } else {
+        document.getElementById("programlist").replaceChild(command.holding, command.placeholder);
+        command.holding.style.display = "";
+    }
+    command.placeholder = null;
+    command.holding = null;
+};
+
+command.dragEnd = function(event) {
+    if (command.placeholder && command.placeholder.parentNode && command.holding) {
+        command.placeholder.parentNode.removeChild(command.placeholder);
+        if (!command.isNew) {
+            command.holding.parentNode.removeChild(command.holding);
+        }
+    }
+};
+
+window.ondragend = command.dragEnd;
 
 
 window.onload = function() {
@@ -76,7 +139,7 @@ function stepCode() {
     } else if (program[step][0] == "add") {
         holding += memory[program[step][1]];
     } else if (program[step][0] == "sub") {
-        holding += memory[program[step][1]];
+        holding -= memory[program[step][1]];
     } else if (program[step][0] == "jump") {
         step = program[step][1] - 1;
     }
@@ -84,10 +147,14 @@ function stepCode() {
     update();
 }
 
+function setProgramStepPos() {
+    document.getElementById("programstep").style["margin-top"] = ((4 * step - 1) / 100 * window.innerWidth - document.getElementById("program").scrollTop) + "px";
+}
+
 function update() {
     if (running) {
         document.getElementById("programstep").style.display = "";
-        document.getElementById("programstep").style["margin-top"] = (4 * step) - 1 + "vw";
+        setProgramStepPos();
         document.getElementById("commands").style.display = "none";
     } else {
         document.getElementById("programstep").style.display = "none";
@@ -96,16 +163,40 @@ function update() {
     
     document.getElementById("commands").innerHTML = "";
     for (var i in commands) {
-        document.getElementById("commands").innerHTML += "<li><span class=\"command " + commands[i] + "\">" + i + "</span></li>";
+        element = document.createElement("li");
+        element.draggable = true;
+        element.ondragstart = command.dragStart;
+        
+        element2 = document.createElement("span");
+        element2.className = "command " + commands[i];
+        element2.innerHTML = i;
+        
+        element.appendChild(element2);
+        
+        document.getElementById("commands").appendChild(element);
     }
     
     document.getElementById("programlist").innerHTML = "";
     for (i=0; i<program.length; i++) {
+        element = document.createElement("li");
+        element.draggable = true;
+        element.ondragstart = command.dragStart;
+        element.ondragenter = function(event) {command.dragEnter(event, this);};
+        
+        element2 = document.createElement("span");
+        element2.className = "command " + commands[program[i][0]];
+        element2.innerHTML = program[i][0];
+        
+        element.appendChild(element2);
+        
         if (program[i][0] == "copyto" || program[i][0] == "copyfrom" || program[i][0] == "jump" || program[i][0] == "add" || program[i][0] == "sub") {
-            document.getElementById("programlist").innerHTML += "<li draggable=\"true\" ondragstart=\"commandDragStart(event);\"><span class=\"command " + commands[program[i][0]] + "\">" + program[i][0] + "</span><span class=\"command " + commands[program[i][0]] + "\">" + program[i][1] + "</span></li>";
-        } else {
-            document.getElementById("programlist").innerHTML += "<li draggable=\"true\" ondragstart=\"commandDragStart(event);\"><span class=\"command " + commands[program[i][0]] + "\">" + program[i][0] + "</span></li>";
+            var element3 = document.createElement("span");
+            element3.className = "command " + commands[program[i][0]];
+            element3.innerHTML = program[i][1];
+            element.appendChild(element3);
         }
+        
+        document.getElementById("programlist").appendChild(element);
     }
     
     
