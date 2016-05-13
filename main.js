@@ -36,7 +36,7 @@ var program = [
     ["input"],
     ["copyto", 0, false],
     ["input"],
-    ["add", 0],
+    ["add", 0, false],
     ["output"],
     ["copyfrom", 0, false],
     ["output"],
@@ -85,8 +85,6 @@ command.dragEnter = function(event, element) {
         }
     }
     
-    //console.log(command.holding);
-    
     if (!isAfter) {
         document.getElementById("programlist").insertBefore(command.placeholder, element.nextSibling);
     } else {
@@ -96,18 +94,46 @@ command.dragEnter = function(event, element) {
 
 command.drop = function(event) {
     event.preventDefault();
+    i=0;
+    child = command.placeholder;
+    while ((child=child.previousSibling) !== null) {
+        i++;
+    }
+    console.log(i);
+    commandType = command.holding.firstChild.innerHTML;
     if (command.isNew) {
+        if (commandType == "copyto" || commandType == "copyfrom" || commandType == "add" || commandType == "sub") {
+            program[i][1] = 0;
+            program[i][2] = false;
+        } else if (commandType == "jump") {
+            program[i][1] = 0;
+        }
+        program.splice(i, 0, [commandType]);
         holdingClone = command.holding.cloneNode(true);
         holdingClone.ondragstart = command.dragStart;
         holdingClone.ondragenter = function(event) {command.dragEnter(event, this);};
         document.getElementById("programlist").replaceChild(holdingClone, command.placeholder);
         holdingClone.style.display = "";
     } else {
+        j=0;
+        child = command.holding;
+        while ((child=child.previousSibling) !== null) {
+            j++;
+        }
+        console.log(j);
+        oldCommand = program[j-1];
+        program.splice(j-1, 1);
+        if (i > j) {
+            program.splice(i-1, 0, oldCommand);
+        } else {
+            program.splice(i, 0, oldCommand);
+        }
         document.getElementById("programlist").replaceChild(command.holding, command.placeholder);
         command.holding.style.display = "";
     }
     command.placeholder = null;
     command.holding = null;
+    update();
 };
 
 command.dragEnd = function(event) {
